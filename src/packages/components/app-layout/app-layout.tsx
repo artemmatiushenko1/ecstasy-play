@@ -1,14 +1,14 @@
 import { Outlet } from 'react-router-dom';
 import styles from './app-layout.module.scss';
-import { Navbar } from '../navbar/navbar.js';
+import { Sidebar } from '../sidebar/sidebar.js';
+import classNames from 'classnames';
 
 const AppLayout = () => {
   return (
-    <div className={styles.appLayout}>
-      <nav className={styles.navbar}>
-        <Navbar />
-      </nav>
-      <aside className={styles.sidebar}>Sidebar</aside>
+    <div className={classNames(styles.appLayout, 'font-jost')}>
+      <aside className={styles.sidebar}>
+        <Sidebar />
+      </aside>
       <main className={styles.main}>
         <Outlet />
       </main>

@@ -8,7 +8,11 @@ export default {
     './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        'jost': ['Jost', 'sans-serif'],
+      },
+    },
   },
   plugins: [nextui()],
 };
