@@ -6,10 +6,10 @@ import classNames from 'classnames';
 const AppLayout = () => {
   return (
     <div className={classNames(styles.appLayout, 'font-jost')}>
-      <aside className={styles.sidebar}>
+      <aside>
         <Sidebar />
       </aside>
-      <main className={styles.main}>
+      <main className="p-6">
         <Outlet />
       </main>
     </div>

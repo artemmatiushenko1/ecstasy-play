@@ -17,13 +17,18 @@ import {
   MdOutlineExpandMore,
   MdLogout,
 } from 'react-icons/md';
+import { useLocation, matchPath, useNavigate } from 'react-router-dom';
 
 const Sidebar = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const menuItems = [
     {
       icon: <MdHomeFilled />,
       title: 'Home',
-      key: 'dashboard',
+      key: 'home',
+      path: '/home',
       color: 'text-primary-500',
       bgColor: 'bg-primary-100',
     },
@@ -31,12 +36,11 @@ const Sidebar = () => {
       icon: <MdEmojiEvents />,
       title: 'Insights',
       key: 'insights',
+      path: '/insights',
       color: 'text-amber-400',
       bgColor: 'bg-amber-100',
     },
   ];
-
-  const activeKey = 'insights';
 
   return (
     <div className="p-3 h-full flex flex-col rounded-tr-lg shadow-md">
@@ -46,31 +50,36 @@ const Sidebar = () => {
       </div>
       <Divider />
       <Listbox variant="flat" classNames={{ 'base': 'flex-1' }}>
-        {menuItems.map((item) => (
-          <ListboxItem
-            startContent={
-              <div
-                className={classNames(
-                  item.color,
-                  'w-[30px] h-[30px] flex justify-center items-center rounded-md',
-                  item.key === activeKey && item.bgColor,
-                )}
-              >
-                {item.icon}
-              </div>
-            }
-            classNames={{
-              'base': 'text-2xl',
-              'title': classNames(
-                'text-base text-gray-500',
-                item.key === activeKey && 'font-medium',
-              ),
-            }}
-            key={item.title}
-          >
-            {item.title}
-          </ListboxItem>
-        ))}
+        {menuItems.map((item) => {
+          const isActive = Boolean(matchPath(item.path, location.pathname));
+
+          return (
+            <ListboxItem
+              key={item.title}
+              onClick={() => navigate(item.path)}
+              startContent={
+                <div
+                  className={classNames(
+                    item.color,
+                    'w-[30px] h-[30px] flex justify-center items-center rounded-md',
+                    isActive && item.bgColor,
+                  )}
+                >
+                  {item.icon}
+                </div>
+              }
+              classNames={{
+                'base': 'text-2xl',
+                'title': classNames(
+                  'text-base text-gray-500',
+                  isActive && 'font-medium',
+                ),
+              }}
+            >
+              {item.title}
+            </ListboxItem>
+          );
+        })}
       </Listbox>
       <Dropdown placement="bottom-end">
         <DropdownTrigger className="cursor-pointer hover:bg-default/40">
