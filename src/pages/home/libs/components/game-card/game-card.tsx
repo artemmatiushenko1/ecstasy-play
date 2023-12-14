@@ -1,6 +1,8 @@
-import { Card, CardBody, Chip, Image } from '@nextui-org/react';
+import { Button, Card, CardBody, Chip, Image } from '@nextui-org/react';
 import { GameSummaryItem } from '../components';
 import { MdPlayCircleFilled, MdSportsScore } from 'react-icons/md';
+import styles from './game-card.module.scss';
+import classNames from 'classnames';
 
 interface IGameCardProps {
   genre: string;
@@ -14,7 +16,21 @@ interface IGameCardProps {
 
 const GameCard = ({ genre, name, summary, coverImg }: IGameCardProps) => {
   return (
-    <Card isPressable isHoverable fullWidth className="py-4 max-w-[400px]">
+    <Card
+      fullWidth
+      className={classNames('py-4 max-w-[400px]', styles.gameCard)}
+    >
+      <div className={styles.gameCardOverlay}>
+        <Button
+          disableRipple
+          disableAnimation
+          color="primary"
+          radius="full"
+          startContent={<MdPlayCircleFilled className="text-xl" />}
+        >
+          Play Now
+        </Button>
+      </div>
       <CardBody className="overflow-visible py-2 px-4 flex flex-row">
         <div className="flex-1 flex flex-col justify-between">
           <div>
