@@ -1,5 +1,7 @@
 import { GameCard } from './libs/components/components.js';
-import tetrisCoverImage from '@/assets/tetris-cover.jpg';
+import tetrisCoverImage from '@/assets/tetris-cover.png';
+import snakeCoverImage from '@/assets/snake-cover.png';
+import connectTilesCoverImage from '@/assets/connect-tiles-cover.png';
 
 const HomePage = () => {
   const games = [
@@ -18,7 +20,7 @@ const HomePage = () => {
       key: 'snake',
       name: 'Snake',
       path: '/games/snake',
-      cover: tetrisCoverImage,
+      cover: snakeCoverImage,
       genre: 'Puzzle',
       summary: {
         bestScore: 12505,
@@ -29,7 +31,7 @@ const HomePage = () => {
       key: 'connectTiles',
       name: 'Connect Tiles',
       path: '/games/connect-tiles',
-      cover: tetrisCoverImage,
+      cover: connectTilesCoverImage,
       genre: 'Memory',
       summary: {
         bestScore: 12505,

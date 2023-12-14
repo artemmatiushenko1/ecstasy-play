@@ -6,12 +6,12 @@ const Snake = () => {
 
   useEffect(() => {
     if (rootRef.current) {
-      mount(rootRef.current);
-    }
+      const unmount = mount(rootRef.current);
 
-    return () => {
-      // TODO: should unmount somehow and restore strict more
-    };
+      return () => {
+        unmount?.();
+      };
+    }
   }, []);
 
   return <div className="flex flex-col" ref={rootRef} />;

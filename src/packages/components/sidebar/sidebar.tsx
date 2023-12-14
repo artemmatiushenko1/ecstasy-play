@@ -5,6 +5,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  Image,
   Listbox,
   ListboxItem,
   User,
@@ -13,11 +14,11 @@ import classNames from 'classnames';
 import {
   MdHomeFilled,
   MdEmojiEvents,
-  MdSportsEsports,
   MdOutlineExpandMore,
   MdLogout,
 } from 'react-icons/md';
 import { useLocation, matchPath, useNavigate } from 'react-router-dom';
+import logoImg from '@/assets/logo.png';
 
 const Sidebar = () => {
   const location = useLocation();
@@ -29,8 +30,8 @@ const Sidebar = () => {
       title: 'Home',
       key: 'home',
       path: '/home',
-      color: 'text-primary-500',
-      bgColor: 'bg-primary-100',
+      color: 'text-primary-300',
+      bgColor: 'bg-primary-50',
     },
     {
       icon: <MdEmojiEvents />,
@@ -45,8 +46,7 @@ const Sidebar = () => {
   return (
     <div className="p-3 h-full flex flex-col rounded-tr-lg shadow-md">
       <div className="flex gap-2 items-center p-3">
-        <MdSportsEsports className="text-3xl text-primary" />
-        GAMES
+        <Image src={logoImg} />
       </div>
       <Divider />
       <Listbox variant="flat" classNames={{ 'base': 'flex-1' }}>
