@@ -3,6 +3,7 @@ import { GameSummaryItem } from '../components';
 import { MdPlayCircleFilled, MdSportsScore } from 'react-icons/md';
 import styles from './game-card.module.scss';
 import classNames from 'classnames';
+import { useNavigate } from 'react-router-dom';
 
 interface IGameCardProps {
   genre: string;
@@ -15,6 +16,10 @@ interface IGameCardProps {
 }
 
 const GameCard = ({ genre, name, summary, coverImg }: IGameCardProps) => {
+  const navigate = useNavigate();
+
+  const handlePlayNowClick = () => navigate('/game');
+
   return (
     <Card
       fullWidth
@@ -26,6 +31,7 @@ const GameCard = ({ genre, name, summary, coverImg }: IGameCardProps) => {
           disableAnimation
           color="primary"
           radius="full"
+          onClick={handlePlayNowClick}
           startContent={<MdPlayCircleFilled className="text-xl" />}
         >
           Play Now
