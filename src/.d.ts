@@ -3,3 +3,9 @@ declare module 'connectTiles/app' {
 
   export default TilesBoard;
 }
+
+declare module 'snake/app' {
+  const mount = (root: HTMLDivElement) => {};
+
+  export default mount;
+}

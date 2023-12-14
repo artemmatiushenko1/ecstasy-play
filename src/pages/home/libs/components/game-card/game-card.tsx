@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import { useNavigate } from 'react-router-dom';
 
 interface IGameCardProps {
+  id: string;
   genre: string;
   name: string;
   coverImg: string;
@@ -15,10 +16,10 @@ interface IGameCardProps {
   };
 }
 
-const GameCard = ({ genre, name, summary, coverImg }: IGameCardProps) => {
+const GameCard = ({ genre, name, summary, coverImg, id }: IGameCardProps) => {
   const navigate = useNavigate();
 
-  const handlePlayNowClick = () => navigate('/game');
+  const handlePlayNowClick = () => navigate('/game', { state: { appId: id } });
 
   return (
     <Card

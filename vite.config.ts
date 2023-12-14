@@ -12,6 +12,7 @@ export default defineConfig({
       shared: ['react', 'react-dom'],
       remotes: {
         'connectTiles': 'http://localhost:3001/assets/remoteEntry.js',
+        'snake': 'http://localhost:3002/assets/remoteEntry.js',
       },
     }),
   ],
