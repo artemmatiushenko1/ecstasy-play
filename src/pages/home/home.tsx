@@ -2,13 +2,13 @@ import { GameCard } from './libs/components/components.js';
 import tetrisCoverImage from '@/assets/tetris-cover.png';
 import snakeCoverImage from '@/assets/snake-cover.png';
 import connectTilesCoverImage from '@/assets/connect-tiles-cover.png';
+import { GameApp } from '@/packages/games/games.package.js';
 
 const HomePage = () => {
   const games = [
     {
-      key: 'tetris',
+      key: GameApp.TETRIS,
       name: 'Tetris',
-      path: '/games/tetris',
       cover: tetrisCoverImage,
       genre: 'Puzzle',
       summary: {
@@ -17,9 +17,8 @@ const HomePage = () => {
       },
     },
     {
-      key: 'snake',
+      key: GameApp.SNAKE,
       name: 'Snake',
-      path: '/games/snake',
       cover: snakeCoverImage,
       genre: 'Puzzle',
       summary: {
@@ -28,9 +27,8 @@ const HomePage = () => {
       },
     },
     {
-      key: 'connectTiles',
+      key: GameApp.CONNECT_TILES,
       name: 'Connect Tiles',
-      path: '/games/connect-tiles',
       cover: connectTilesCoverImage,
       genre: 'Memory',
       summary: {

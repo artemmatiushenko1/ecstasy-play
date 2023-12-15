@@ -1,1 +1,1 @@
-export { default as ConnectTiles } from './connect-tiles/connect-tiles.jsx';
+export { GameApp } from './enums/enums.js';

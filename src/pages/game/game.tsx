@@ -1,4 +1,4 @@
-import { ErrorBoundary } from '@/packages/components/components';
+import { ErrorBoundary } from '@/packages/components/components.js';
 import {
   Button,
   Modal,
@@ -21,10 +21,10 @@ import { ValueOf } from '@/libs/types/types.js';
 import { GameAppEvent } from './libs/enums/enums.js';
 
 const ConnectTilesApp = lazy(
-  () => import('@/packages/games/connect-tiles/connect-tiles'),
+  () => import('@/packages/games/apps/connect-tiles/connect-tiles.js'),
 );
 
-const SnakeApp = lazy(() => import('@/packages/games/snake/snake'));
+const SnakeApp = lazy(() => import('@/packages/games/apps/snake/snake.js'));
 
 const GameEventService = {
   fire: (event: ValueOf<typeof GameAppEvent>, body?: CustomEventInit): void => {
