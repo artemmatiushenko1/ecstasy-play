@@ -1,4 +1,4 @@
-import { ErrorBoundary } from '@/packages/components/components.js';
+import { ErrorBoundary } from '@/libs/components/components.js';
 import { Button, Spinner, Tooltip } from '@nextui-org/react';
 import { Suspense, lazy, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -63,7 +63,15 @@ const GamePage = () => {
     };
   }, []);
 
-  const handleQuitGame = () => navigate(AppRoute.HOME);
+  const handleQuitGame = () => {
+    navigate(AppRoute.HOME);
+  };
+
+  const handlePlayAgain = () => {
+    const restartGameEvent = new CustomEvent(GameAppEvent.RESTART);
+    setHasGameEnded(false);
+    window.dispatchEvent(restartGameEvent);
+  };
 
   const appsMap = {
     [GameApp.SNAKE]: SnakeApp,
@@ -122,7 +130,7 @@ const GamePage = () => {
         score={score}
         isOpen={hasGameEnded}
         onQuitClick={handleQuitGame}
-        onPlayAgainClick={() => console.log('Play Again')}
+        onPlayAgainClick={handlePlayAgain}
       />
     </>
   );
