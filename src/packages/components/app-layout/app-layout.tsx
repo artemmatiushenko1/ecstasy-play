@@ -9,7 +9,7 @@ const AppLayout = () => {
       <aside>
         <Sidebar />
       </aside>
-      <main className="p-6">
+      <main className="p-6 overflow-auto">
         <Outlet />
       </main>
     </div>

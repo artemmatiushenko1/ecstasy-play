@@ -51,6 +51,7 @@ const HomePage = () => {
       <div className="flex gap-3 flex-wrap">
         {games.map((game) => (
           <GameCard
+            key={game.key}
             id={game.key}
             name={game.name}
             genre={game.genre}
