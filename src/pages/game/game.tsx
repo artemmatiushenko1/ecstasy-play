@@ -11,6 +11,7 @@ import { AppRoute } from '@/libs/enums/enums.js';
 import { ValueOf } from '@/libs/types/types.js';
 import { GameAppEvent } from './libs/enums/enums.js';
 import { GameResultModal } from './libs/components/game-result-modal.js';
+import { GameApp } from '@/packages/games/games.package.js';
 
 const ConnectTilesApp = lazy(
   () => import('@/packages/games/apps/connect-tiles/connect-tiles.js'),
@@ -65,8 +66,8 @@ const GamePage = () => {
   const handleQuitGame = () => navigate(AppRoute.HOME);
 
   const appsMap = {
-    'snake': SnakeApp,
-    'connectTiles': ConnectTilesApp,
+    [GameApp.SNAKE]: SnakeApp,
+    [GameApp.CONNECT_TILES]: ConnectTilesApp,
   };
 
   const GameAppComponent =
