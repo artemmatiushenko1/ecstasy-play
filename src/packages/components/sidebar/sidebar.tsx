@@ -19,6 +19,7 @@ import {
 } from 'react-icons/md';
 import { useLocation, matchPath, useNavigate } from 'react-router-dom';
 import logoImg from '@/assets/logo.png';
+import { AppRoute } from '@/libs/enums/enums.js';
 
 const Sidebar = () => {
   const location = useLocation();
@@ -29,7 +30,7 @@ const Sidebar = () => {
       icon: <MdHomeFilled />,
       title: 'Home',
       key: 'home',
-      path: '/home',
+      path: AppRoute.HOME,
       color: 'text-primary-300',
       bgColor: 'bg-primary-50',
     },
@@ -37,7 +38,7 @@ const Sidebar = () => {
       icon: <MdEmojiEvents />,
       title: 'Insights',
       key: 'insights',
-      path: '/insights',
+      path: AppRoute.INSIGHTS,
       color: 'text-amber-400',
       bgColor: 'bg-amber-100',
     },

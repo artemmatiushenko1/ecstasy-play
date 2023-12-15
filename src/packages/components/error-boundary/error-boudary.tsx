@@ -21,7 +21,7 @@ class ErrorBoundary extends Component<IErrorBoundaryProps, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <h1>
+        <h1 className="inline-block">
           <span className="text-danger-500 font-bold text-4xl inline-flex items-center">
             <MdError className="mr-2" />
             Oops...

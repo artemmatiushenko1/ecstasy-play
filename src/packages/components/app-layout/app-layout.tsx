@@ -1,15 +1,19 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import styles from './app-layout.module.scss';
 import { Sidebar } from '../sidebar/sidebar.js';
-import classNames from 'classnames';
+import { AppRoute } from '@/libs/enums/app-route.enum.js';
 
 const AppLayout = () => {
+  const location = useLocation();
+
   return (
-    <div className={classNames(styles.appLayout, 'font-jost')}>
-      <aside>
-        <Sidebar />
-      </aside>
-      <main className="p-6 overflow-auto">
+    <div className={styles.appLayout}>
+      {location.pathname !== AppRoute.GAME && (
+        <aside className={styles.sidebar}>
+          <Sidebar />
+        </aside>
+      )}
+      <main className="p-6 overflow-auto flex-1">
         <Outlet />
       </main>
     </div>
