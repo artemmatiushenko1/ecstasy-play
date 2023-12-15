@@ -1,24 +1,16 @@
 import { ErrorBoundary } from '@/packages/components/components.js';
-import {
-  Button,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  Spinner,
-  Tooltip,
-} from '@nextui-org/react';
+import { Button, Spinner, Tooltip } from '@nextui-org/react';
 import { Suspense, lazy, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   MdOutlineArrowBackIosNew,
   MdAccessTime,
   MdSportsScore,
-  MdEmojiEvents,
 } from 'react-icons/md';
 import { AppRoute } from '@/libs/enums/enums.js';
 import { ValueOf } from '@/libs/types/types.js';
 import { GameAppEvent } from './libs/enums/enums.js';
+import { GameResultModal } from './libs/components/game-result-modal.js';
 
 const ConnectTilesApp = lazy(
   () => import('@/packages/games/apps/connect-tiles/connect-tiles.js'),
@@ -125,37 +117,12 @@ const GamePage = () => {
           </ErrorBoundary>
         </div>
       </div>
-      <Modal
-        backdrop="blur"
-        hideCloseButton
-        placement="center"
+      <GameResultModal
+        score={score}
         isOpen={hasGameEnded}
-      >
-        <ModalContent className="py-9">
-          <ModalBody className="text-center">
-            <div className="flex flex-col items-center">
-              <h2 className="mb-5 text-default">
-                Congratulations! You've scored:
-              </h2>
-              <h3 className="text-6xl font-bold text-center ">{score}</h3>
-              <MdEmojiEvents className="text-amber-400 text-8xl text-center mb-5" />
-            </div>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              fullWidth
-              color="danger"
-              variant="light"
-              onPress={handleQuitGame}
-            >
-              Quit
-            </Button>
-            <Button fullWidth color="primary">
-              Play Again
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+        onQuitClick={handleQuitGame}
+        onPlayAgainClick={() => console.log('Play Again')}
+      />
     </>
   );
 };
