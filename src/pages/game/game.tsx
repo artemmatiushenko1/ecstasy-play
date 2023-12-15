@@ -1,3 +1,4 @@
+import { ErrorBoundary } from '@/packages/components/components';
 import { Spinner } from '@nextui-org/react';
 import { Suspense, lazy } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -22,9 +23,11 @@ const GamePage = () => {
 
   return (
     <div className="flex items-center justify-center h-full">
-      <Suspense fallback={<Spinner size="lg" />}>
-        <AppComponent />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<Spinner size="lg" />}>
+          <AppComponent />
+        </Suspense>
+      </ErrorBoundary>
     </div>
   );
 };
