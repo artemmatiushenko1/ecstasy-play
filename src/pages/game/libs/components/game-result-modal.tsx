@@ -21,14 +21,21 @@ const GameResultModal = ({
   onQuitClick,
 }: IGameResultModal) => {
   return (
-    <Modal backdrop="blur" hideCloseButton placement="center" isOpen={isOpen}>
+    <Modal
+      backdrop="blur"
+      hideCloseButton
+      placement="center"
+      isOpen={isOpen}
+      classNames={{ 'base': 'overflow-y-visible' }}
+    >
       <ModalContent className="py-9">
         <ModalBody className="text-center">
+          <h2 className="absolute top-[-15px] left-[50%] -translate-x-2/4 bg-amber-400 text-white p-3 rounded-md">
+            Congratulations!
+          </h2>
           <div className="flex flex-col items-center">
-            <h2 className="mb-5 text-default">
-              Congratulations! You've scored:
-            </h2>
-            <h3 className="text-6xl font-bold text-center ">{score}</h3>
+            <p className="mb-5 text-default">You've scored:</p>
+            <p className="text-6xl font-bold text-center ">{score}</p>
             <MdEmojiEvents className="text-amber-400 text-8xl text-center mb-5" />
           </div>
         </ModalBody>
