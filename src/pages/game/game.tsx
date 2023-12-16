@@ -3,38 +3,23 @@ import { Button, Spinner, Tooltip } from '@nextui-org/react';
 import { Suspense, lazy, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
-  MdOutlineArrowBackIosNew,
   MdAccessTime,
   MdSportsScore,
+  MdOutlineArrowBackIosNew,
 } from 'react-icons/md';
 import { AppRoute } from '@/libs/enums/enums.js';
-import { ValueOf } from '@/libs/types/types.js';
-import { GameAppEvent } from './libs/enums/enums.js';
-import { GameResultModal } from './libs/components/game-result-modal.js';
-import { GameApp } from '@/packages/games/games.package.js';
+import { GameResultModal } from './libs/components/components.js';
+import {
+  GameApp,
+  GameAppEventService,
+  GameAppEvent,
+} from '@/packages/games/games.package.js';
 
 const ConnectTilesApp = lazy(
   () => import('@/packages/games/apps/connect-tiles/connect-tiles.js'),
 );
 
 const SnakeApp = lazy(() => import('@/packages/games/apps/snake/snake.js'));
-
-const GameEventService = {
-  fire: (event: ValueOf<typeof GameAppEvent>, body?: CustomEventInit): void => {
-    const customEvent = new CustomEvent(event, body);
-
-    window.dispatchEvent(customEvent);
-  },
-  subscribe: (event: ValueOf<typeof GameAppEvent>, listener: EventListener) => {
-    window.addEventListener(event, listener);
-  },
-  unsubscribe: (
-    event: ValueOf<typeof GameAppEvent>,
-    listener: EventListener,
-  ) => {
-    window.removeEventListener(event, listener);
-  },
-};
 
 const GamePage = () => {
   const location = useLocation();
@@ -51,15 +36,15 @@ const GamePage = () => {
       setHasGameEnded(true);
     };
 
-    GameEventService.subscribe(GameAppEvent.SCORE_UPDATE, handleScoreChange);
-    GameEventService.subscribe(GameAppEvent.END, handleGameEnd);
+    GameAppEventService.subscribe(GameAppEvent.SCORE_UPDATE, handleScoreChange);
+    GameAppEventService.subscribe(GameAppEvent.END, handleGameEnd);
 
     return () => {
-      GameEventService.unsubscribe(
+      GameAppEventService.unsubscribe(
         GameAppEvent.SCORE_UPDATE,
         handleScoreChange,
       );
-      GameEventService.unsubscribe(GameAppEvent.END, handleGameEnd);
+      GameAppEventService.unsubscribe(GameAppEvent.END, handleGameEnd);
     };
   }, []);
 
@@ -68,9 +53,8 @@ const GamePage = () => {
   };
 
   const handlePlayAgain = () => {
-    const restartGameEvent = new CustomEvent(GameAppEvent.RESTART);
+    GameAppEventService.fire(GameAppEvent.RESTART);
     setHasGameEnded(false);
-    window.dispatchEvent(restartGameEvent);
   };
 
   const appsMap = {
