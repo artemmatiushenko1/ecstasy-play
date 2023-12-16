@@ -1,0 +1,3 @@
+const GAME_TIMER_DELAY = 1000;
+
+export { GAME_TIMER_DELAY };

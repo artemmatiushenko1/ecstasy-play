@@ -14,6 +14,8 @@ import {
   GameAppEventService,
   GameAppEvent,
 } from '@/packages/games/games.package.js';
+import { formatGameTime } from './libs/helpers/helpers.js';
+import { GAME_TIMER_DELAY } from './libs/constants/constants.js';
 
 const ConnectTilesApp = lazy(
   () => import('@/packages/games/apps/connect-tiles/connect-tiles.js'),
@@ -26,8 +28,22 @@ const TetrisApp = lazy(() => import('@/packages/games/apps/tetris/tetris.js'));
 const GamePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
   const [score, setScore] = useState(0);
+  const [gameTime, setGameTime] = useState(0);
   const [hasGameEnded, setHasGameEnded] = useState(false);
+
+  useEffect(() => {
+    if (!hasGameEnded) {
+      const timerId = setInterval(() => {
+        setGameTime((prevTime) => prevTime + 1);
+      }, GAME_TIMER_DELAY);
+
+      return () => {
+        clearInterval(timerId);
+      };
+    }
+  }, [hasGameEnded]);
 
   useEffect(() => {
     const handleScoreUpdate = (e: CustomEventInit) => {
@@ -60,6 +76,7 @@ const GamePage = () => {
 
   const handlePlayAgain = () => {
     GameAppEventService.fire(GameAppEvent.RESTART);
+    setGameTime(0);
     setHasGameEnded(false);
   };
 
@@ -110,30 +127,34 @@ const GamePage = () => {
           </h1>
           <div className="flex items-center justify-end gap-5 flex-1">
             <Tooltip content="Score" placement="bottom">
-              <Chip
-                color="primary"
-                className="text-xl"
-                classNames={{
-                  base: 'h-auto bg-primary-50',
-                  content: 'flex items-center gap-2 text-primary font-medium',
-                }}
-              >
-                <MdSportsScore />
-                <span>{score}</span>
-              </Chip>
+              <div className="min-w-[100px] flex justify-end">
+                <Chip
+                  color="primary"
+                  className="text-xl"
+                  classNames={{
+                    base: 'h-auto bg-primary-50',
+                    content: 'flex items-center gap-2 text-primary font-medium',
+                  }}
+                >
+                  <MdSportsScore />
+                  <span>{score}</span>
+                </Chip>
+              </div>
             </Tooltip>
             <Tooltip content="Playing Time" placement="bottom">
-              <Chip
-                color="primary"
-                className="text-xl"
-                classNames={{
-                  base: 'h-auto bg-primary-50',
-                  content: 'flex items-center gap-2 text-primary font-medium',
-                }}
-              >
-                <MdAccessTime />
-                <span>00:00</span>
-              </Chip>
+              <div className="min-w-[110px]">
+                <Chip
+                  color="primary"
+                  className="text-xl"
+                  classNames={{
+                    base: 'h-auto bg-primary-50',
+                    content: 'flex items-center gap-2 text-primary font-medium',
+                  }}
+                >
+                  <MdAccessTime />
+                  <span>{formatGameTime(gameTime)}</span>
+                </Chip>
+              </div>
             </Tooltip>
           </div>
         </div>
