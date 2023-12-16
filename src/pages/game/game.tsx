@@ -28,7 +28,7 @@ const GamePage = () => {
   const [hasGameEnded, setHasGameEnded] = useState(false);
 
   useEffect(() => {
-    const handleScoreChange = (e: CustomEventInit) => {
+    const handleScoreUpdate = (e: CustomEventInit) => {
       setScore(e.detail.score);
     };
 
@@ -36,15 +36,19 @@ const GamePage = () => {
       setHasGameEnded(true);
     };
 
-    GameAppEventService.subscribe(GameAppEvent.SCORE_UPDATE, handleScoreChange);
-    GameAppEventService.subscribe(GameAppEvent.END, handleGameEnd);
+    const handlers = [
+      [GameAppEvent.SCORE_UPDATE, handleScoreUpdate],
+      [GameAppEvent.END, handleGameEnd],
+    ] as const;
+
+    for (const [event, handler] of handlers) {
+      GameAppEventService.subscribe(event, handler);
+    }
 
     return () => {
-      GameAppEventService.unsubscribe(
-        GameAppEvent.SCORE_UPDATE,
-        handleScoreChange,
-      );
-      GameAppEventService.unsubscribe(GameAppEvent.END, handleGameEnd);
+      for (const [event, handler] of handlers) {
+        GameAppEventService.unsubscribe(event, handler);
+      }
     };
   }, []);
 

@@ -1,5 +1,9 @@
 declare module 'connectTiles/app' {
-  const TilesBoard: React.FC;
+  import { GameAppEventService } from '@/packages/games/games.package.js';
+
+  const TilesBoard: React.FC<{
+    gameAppEventService: typeof GameAppEventService;
+  }>;
 
   export default TilesBoard;
 }
