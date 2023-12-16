@@ -20,10 +20,13 @@ import {
 import { useLocation, matchPath, useNavigate } from 'react-router-dom';
 import logoImg from '@/assets/logo.png';
 import { AppRoute } from '@/libs/enums/enums.js';
+import { useAuthStore } from '@/stores/auth/auth.js';
 
 const Sidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
+  const { user } = useAuthStore();
 
   const menuItems = [
     {
@@ -93,8 +96,8 @@ const Sidebar = () => {
             }}
           >
             <User
-              name="Jane Doe"
-              description="zoey@example.com"
+              name={[user.firstName, user.lastName].join(' ')}
+              description={user.email}
               avatarProps={{
                 className: 'transition-transform mr-2',
                 isBordered: true,
@@ -108,7 +111,7 @@ const Sidebar = () => {
         <DropdownMenu aria-label="Profile Actions" variant="flat">
           <DropdownItem key="profile" className="h-14 gap-2">
             <p className="font-semibold">Signed in as</p>
-            <p className="font-semibold">zoey@example.com</p>
+            <p className="font-semibold">{user.email}</p>
           </DropdownItem>
           <DropdownItem startContent={<MdLogout />} key="logout" color="danger">
             Log Out
