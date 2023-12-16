@@ -21,6 +21,8 @@ const ConnectTilesApp = lazy(
 
 const SnakeApp = lazy(() => import('@/packages/games/apps/snake/snake.js'));
 
+const TetrisApp = lazy(() => import('@/packages/games/apps/tetris/tetris.js'));
+
 const GamePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -64,6 +66,7 @@ const GamePage = () => {
   const appsMap = {
     [GameApp.SNAKE]: SnakeApp,
     [GameApp.CONNECT_TILES]: ConnectTilesApp,
+    [GameApp.TETRIS]: TetrisApp,
   };
 
   const GameAppComponent =

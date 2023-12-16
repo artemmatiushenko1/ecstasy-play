@@ -19,3 +19,15 @@ declare module 'snake/app' {
 
   export default mount;
 }
+
+declare module 'tetris/app' {
+  import { GameAppEventService } from '@/packages/games/games.package.js';
+
+  const unmount: () => void;
+  const mount: (
+    root: HTMLDivElement,
+    gameAppEventService: typeof GameAppEventService,
+  ) => typeof unmount;
+
+  export default mount;
+}

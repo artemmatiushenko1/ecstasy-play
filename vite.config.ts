@@ -13,6 +13,7 @@ export default defineConfig({
       remotes: {
         'connectTiles': 'http://localhost:3001/assets/remoteEntry.js',
         'snake': 'http://localhost:3002/assets/remoteEntry.js',
+        'tetris': 'http://localhost:3003/assets/remoteEntry.js',
       },
     }),
   ],
