@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tetrislet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script defer type="module" src="./src/js/index.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: black;
+        color: white;
+        font-family: 'Press Start 2P', cursive;
+      }
+
+      .wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 50px 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper" id="root"></div>
+  </body>
+</html>

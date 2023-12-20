@@ -1,0 +1,46 @@
+.main {
+  width: 320px;
+  height: 620px;
+  border: 10px solid seashell;
+  font-size: 0;
+  background: black;
+  color: white;
+}
+
+.cell {
+  width: 30px;
+  height: 30px;
+  border: 1px solid seashell;
+  display: inline-block;
+}
+
+.grey_cell {
+  background-color: rgb(145, 141, 141);
+}
+
+.green_cell {
+  background-color: #00ff00;
+}
+
+.red_cell {
+  background-color: #e9111cf5;
+}
+
+.violet_cell {
+  background-color: #fd52a8;
+}
+
+.blue_cell {
+  background-color: #4682b4;
+}
+
+.yellow_cell {
+  background-color: #e9e916;
+}
+.pink_cell {
+  background-color: rgb(228, 49, 204);
+}
+
+.hidden {
+  opacity: 0;
+}

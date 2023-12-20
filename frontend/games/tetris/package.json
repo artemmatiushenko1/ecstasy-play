@@ -1,0 +1,30 @@
+{
+  "name": "tetrislet",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ./src/js",
+    "lint:fix": "eslint ./src/js --fix",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite build && vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KhrapkoVasyl/Tetrislet.git"
+  },
+  "author": "Vasyl Khrapko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KhrapkoVasyl/Tetrislet/issues"
+  },
+  "homepage": "https://github.com/KhrapkoVasyl/Tetrislet#readme",
+  "devDependencies": {
+    "@originjs/vite-plugin-federation": "^1.3.3",
+    "eslint": "^8.4.1",
+    "vite": "^5.0.10"
+  }
+}
