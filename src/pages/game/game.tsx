@@ -15,7 +15,7 @@ import {
   GameAppEvent,
 } from '@/packages/games/games.package.js';
 import { formatGameTime } from './libs/helpers/helpers.js';
-import { GAME_TIMER_DELAY } from './libs/constants/constants.js';
+import { useTimer } from '@/libs/hooks/hooks.js';
 
 const ConnectTilesApp = lazy(
   () => import('@/packages/games/apps/connect-tiles/connect-tiles.js'),
@@ -30,20 +30,14 @@ const GamePage = () => {
   const navigate = useNavigate();
 
   const [score, setScore] = useState(0);
-  const [gameTime, setGameTime] = useState(0);
   const [hasGameEnded, setHasGameEnded] = useState(false);
 
-  useEffect(() => {
-    if (!hasGameEnded) {
-      const timerId = setInterval(() => {
-        setGameTime((prevTime) => prevTime + 1);
-      }, GAME_TIMER_DELAY);
-
-      return () => {
-        clearInterval(timerId);
-      };
-    }
-  }, [hasGameEnded]);
+  const {
+    time,
+    stop: stopTimer,
+    start: startTimer,
+    reset: resetTimer,
+  } = useTimer();
 
   useEffect(() => {
     const handleScoreUpdate = (e: CustomEventInit) => {
@@ -52,11 +46,23 @@ const GamePage = () => {
 
     const handleGameEnd = () => {
       setHasGameEnded(true);
+      stopTimer();
+    };
+
+    const handleGameAppMount = () => {
+      startTimer();
+    };
+
+    const handleGameAppUnmount = () => {
+      stopTimer();
+      resetTimer();
     };
 
     const handlers = [
       [GameAppEvent.SCORE_UPDATE, handleScoreUpdate],
       [GameAppEvent.END, handleGameEnd],
+      [GameAppEvent.MOUNT, handleGameAppMount],
+      [GameAppEvent.UNMOUNT, handleGameAppUnmount],
     ] as const;
 
     for (const [event, handler] of handlers) {
@@ -68,7 +74,7 @@ const GamePage = () => {
         GameAppEventService.unsubscribe(event, handler);
       }
     };
-  }, []);
+  }, [startTimer, stopTimer, resetTimer]);
 
   const handleQuitGame = () => {
     navigate(AppRoute.HOME);
@@ -76,7 +82,8 @@ const GamePage = () => {
 
   const handlePlayAgain = () => {
     GameAppEventService.fire(GameAppEvent.RESTART);
-    setGameTime(0);
+    resetTimer();
+    startTimer();
     setHasGameEnded(false);
   };
 
@@ -152,7 +159,7 @@ const GamePage = () => {
                   }}
                 >
                   <MdAccessTime />
-                  <span>{formatGameTime(gameTime)}</span>
+                  <span>{formatGameTime(time)}</span>
                 </Chip>
               </div>
             </Tooltip>

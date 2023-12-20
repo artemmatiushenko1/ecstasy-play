@@ -7,7 +7,7 @@ const Snake = () => {
 
   useEffect(() => {
     if (rootRef.current) {
-      const unmount = mount(rootRef.current, GameAppEventService);
+      const unmount = mount?.(rootRef.current, GameAppEventService);
 
       return () => {
         unmount?.();
