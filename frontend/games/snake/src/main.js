@@ -45,12 +45,12 @@ const mount = (root, gameAppEventService, config) => {
     gameAppEventService
   );
 
-  gameAppEventService.fire(gameAppEventService.GameAppEvent.MOUNT);
+  gameAppEventService?.fire(gameAppEventService.GameAppEvent.MOUNT);
 
   return () => {
     game.destroy();
     root.replaceChildren();
-    gameAppEventService.fire(gameAppEventService.GameAppEvent.UNMOUNT);
+    gameAppEventService?.fire(gameAppEventService.GameAppEvent.UNMOUNT);
   };
 };
 

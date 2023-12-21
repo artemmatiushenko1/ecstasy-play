@@ -1,0 +1,57 @@
+version: '3.9'
+
+services:
+  micro-host:
+    container_name: micro-host
+    restart: unless-stopped
+    image: micro-host-prod:1.0.0
+    build:
+      context: host
+      dockerfile: ../Dockerfile
+    ports:
+      - 3000:80
+    networks:
+      - shared-network
+    depends_on:
+      - micro-connect-tiles
+      - micro-snake
+      - micro-tetris
+
+  micro-connect-tiles:
+    container_name: micro-connect-tiles
+    restart: unless-stopped
+    image: micro-connect-tiles-prod:1.0.0
+    build:
+      context: games/connect-tiles
+      dockerfile: ../../Dockerfile
+    ports:
+      - 3001:80
+    networks:
+      - shared-network
+
+  micro-snake:
+    container_name: micro-snake
+    restart: unless-stopped
+    image: micro-snake-prod:1.0.0
+    build:
+      context: games/snake
+      dockerfile: ../../Dockerfile
+    ports:
+      - 3002:80
+    networks:
+      - shared-network
+
+  micro-tetris:
+    container_name: micro-tetris
+    restart: unless-stopped
+    image: micro-tetris-prod:1.0.0
+    build:
+      context: games/tetris
+      dockerfile: ../../Dockerfile
+    ports:
+      - 3003:80
+    networks:
+      - shared-network
+
+networks:
+  shared-network:

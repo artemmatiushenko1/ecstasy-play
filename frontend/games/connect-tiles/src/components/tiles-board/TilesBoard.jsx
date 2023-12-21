@@ -62,7 +62,7 @@ const TilesBoard = ({ gameAppEventService }) => {
       handleRestart
     );
 
-    gameAppEventService.fire(gameAppEventService.GameAppEvent.MOUNT);
+    gameAppEventService?.fire(gameAppEventService.GameAppEvent.MOUNT);
 
     return () => {
       gameAppEventService?.unsubscribe(
@@ -70,7 +70,7 @@ const TilesBoard = ({ gameAppEventService }) => {
         handleRestart
       );
 
-      gameAppEventService.fire(gameAppEventService.GameAppEvent.UNMOUNT);
+      gameAppEventService?.fire(gameAppEventService.GameAppEvent.UNMOUNT);
     };
   }, []);
 
