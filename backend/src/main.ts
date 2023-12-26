@@ -4,6 +4,7 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -18,6 +19,19 @@ async function bootstrap() {
   const GLOBAL_PREFIX = configService.get('GLOBAL_PREFIX');
 
   app.setGlobalPrefix(GLOBAL_PREFIX);
+
+  const ENABLE_SWAGGER = configService.get<boolean>('ENABLE_SWAGGER');
+  if (ENABLE_SWAGGER) {
+    const swaggerConfig = new DocumentBuilder()
+      .setTitle(configService.get('npm_package_name'))
+      .setVersion(configService.get('npm_package_version'))
+      .addBearerAuth()
+      .build();
+
+    const document = SwaggerModule.createDocument(app, swaggerConfig);
+    const SWAGGER_DOCS_PATH = configService.get('SWAGGER_DOCS_PATH');
+    SwaggerModule.setup(SWAGGER_DOCS_PATH, app, document);
+  }
 
   await app.listen(PORT, HOST, () => {
     console.log(`Server listens on http://${HOST}:${PORT}`);
