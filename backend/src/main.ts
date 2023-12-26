@@ -5,6 +5,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { validationPipe } from './common/pipes';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -32,6 +33,8 @@ async function bootstrap() {
     const SWAGGER_DOCS_PATH = configService.get('SWAGGER_DOCS_PATH');
     SwaggerModule.setup(SWAGGER_DOCS_PATH, app, document);
   }
+
+  app.useGlobalPipes(validationPipe);
 
   await app.listen(PORT, HOST, () => {
     console.log(`Server listens on http://${HOST}:${PORT}`);
