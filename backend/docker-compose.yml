@@ -11,6 +11,31 @@ services:
       - '5432:5432'
     volumes:
       - db:/var/lib/dic
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - network
+
+  redis-commander:
+    image: 'rediscommander/redis-commander:latest'
+    environment:
+      REDIS_HOSTS: redis
+    ports:
+      - '8081:8081'
+    depends_on:
+      - redis
+    networks:
+      - network
+
 volumes:
   db:
-    driver: local
+  redis_data:
+
+networks:
+  network:
+    driver: bridge
