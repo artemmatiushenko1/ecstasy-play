@@ -5,6 +5,8 @@ import { CommonEntity } from 'src/common/entities';
 import * as bcrypt from 'bcrypt';
 import { UserRoleEnum } from 'src/common/enums';
 
+const SALT_ROUNDS = Number(process.env.SALT_ROUNDS);
+
 @Entity({ name: 'users' })
 export class UserEntity extends CommonEntity {
   @ApiProperty({ type: 'string', maxLength: 32 })
@@ -28,7 +30,6 @@ export class UserEntity extends CommonEntity {
   @BeforeUpdate()
   public async hashPassword() {
     if (this.password) {
-      const SALT_ROUNDS = Number(process.env.SALT_ROUNDS);
       this.password = await bcrypt.hash(this.password, SALT_ROUNDS);
     }
   }

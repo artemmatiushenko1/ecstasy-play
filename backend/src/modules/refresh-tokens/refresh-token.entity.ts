@@ -3,7 +3,8 @@ import { Entity, Column, ManyToOne, JoinColumn, BeforeInsert } from 'typeorm';
 import { CommonEntity } from 'src/common/entities';
 import { UserEntity } from '../users/user.entity';
 import * as bcrypt from 'bcrypt';
-import { SALT_ROUNDS } from 'src/common/constants';
+
+const SALT_ROUNDS = Number(process.env.SALT_ROUNDS);
 
 @Entity({ name: 'refresh-tokens' })
 export class RefreshTokenEntity extends CommonEntity {
