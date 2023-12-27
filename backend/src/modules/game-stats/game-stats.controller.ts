@@ -5,13 +5,14 @@ import {
   Get,
   Param,
   Post,
+  Query,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { GameStatsService } from './game-stats.service';
 import { GameStatsEntity } from './game-stats.entity';
 import { IdDto } from 'src/common/dto';
-import { CreateGameStatsDto } from './dto';
+import { CreateGameStatsDto, FindAllGameStatsDto } from './dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import { AccessTokenGuard } from '../auth/guards';
@@ -27,9 +28,15 @@ export class GameStatsController {
   constructor(private readonly gameStatsService: GameStatsService) {}
 
   @Get()
-  findAll(): Promise<GameStatsEntity[]> {
+  findAll(
+    @Query() findAllGameStatsDto: FindAllGameStatsDto,
+  ): Promise<GameStatsEntity[]> {
+    const { gameId } = findAllGameStatsDto;
     return this.gameStatsService.findAll({
+      ...findAllGameStatsDto,
+      where: { game: { id: gameId } },
       relations: { game: true, user: true },
+      order: { score: 'DESC', time: 'ASC' },
     });
   }
 
