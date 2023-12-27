@@ -1,6 +1,7 @@
 import { AppRoute } from '@/libs/enums/app-route.enum';
 import { authApi } from '@/packages/auth/auth.package';
 import { SignUpRequest } from '@/packages/auth/libs/types/sign-up-request.type';
+import { useAuthStore } from '@/stores/auth/auth';
 import { Button, Input } from '@nextui-org/react';
 import {
   MdLockOutline,
@@ -11,7 +12,10 @@ import { useMutation } from 'react-query';
 import { Link } from 'react-router-dom';
 
 const SignUpForm = () => {
-  const signUpMutation = useMutation(authApi.signUp);
+  const setAccessToken = useAuthStore((state) => state.setAccessToken);
+  const signUpMutation = useMutation(authApi.signUp, {
+    onSuccess: ({ accessToken }) => setAccessToken(accessToken),
+  });
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();

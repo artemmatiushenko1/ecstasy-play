@@ -1,7 +1,9 @@
+import { useAuthStore } from '@/stores/auth/auth.js';
 import {
   HttpClientRequestConfig,
   IHttpClient,
 } from './libs/interfaces/interfaces.js';
+import { useProfileStore } from '@/stores/profile/profile.js';
 
 type HttpClientArgs = {
   baseUrl: string;
@@ -16,7 +18,7 @@ class HttpClient implements IHttpClient {
 
   private getAuthHeader() {
     const tokenType = 'Bearer';
-    const token = window.localStorage.getItem('accessToken');
+    const token = useAuthStore.getState().accessToken;
     return { Authorization: `${tokenType} ${token}` };
   }
 
@@ -43,18 +45,17 @@ class HttpClient implements IHttpClient {
       headers,
     };
 
-    try {
-      const requestUrl = this.baseUrl + url;
+    const requestUrl = this.baseUrl + url;
 
-      const req = await fetch(requestUrl, requestConfig);
-      const res = await req.json();
+    const req = await fetch(requestUrl, requestConfig);
+    const res = await req.json();
 
-      return res as Promise<T>;
-    } catch (err) {
-      console.log({ err });
+    if (res.statusCode === 401) {
+      useAuthStore.setState({ accessToken: null });
+      useProfileStore.setState({ user: null });
     }
 
-    return null;
+    return res as Promise<T>;
   }
 }
 
