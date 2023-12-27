@@ -1,18 +1,26 @@
 import { AppRoute } from '@/libs/enums/app-route.enum';
+import { authApi } from '@/packages/auth/auth.package';
+import { SignUpRequest } from '@/packages/auth/libs/types/sign-up-request.type';
 import { Button, Input } from '@nextui-org/react';
 import {
   MdLockOutline,
   MdOutlineMailOutline,
   MdOutlinePersonOutline,
 } from 'react-icons/md';
+import { useMutation } from 'react-query';
 import { Link } from 'react-router-dom';
 
 const SignUpForm = () => {
+  const signUpMutation = useMutation(authApi.signUp);
+
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const formData = new FormData(e.target as HTMLFormElement);
-    console.log(Object.fromEntries(formData));
+    const signUpRequest = Object.fromEntries(
+      new FormData(e.target as HTMLFormElement),
+    ) as SignUpRequest;
+
+    signUpMutation.mutate(signUpRequest);
   };
 
   return (
@@ -22,7 +30,7 @@ const SignUpForm = () => {
         onSubmit={handleFormSubmit}
       >
         <Input
-          name="fullName"
+          name="name"
           isRequired
           fullWidth
           startContent={
@@ -54,6 +62,7 @@ const SignUpForm = () => {
           color="primary"
           className="mb-2"
           variant="solid"
+          isLoading={signUpMutation.isLoading}
         >
           Sign Up
         </Button>

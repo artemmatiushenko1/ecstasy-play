@@ -32,12 +32,16 @@ class HttpClient implements IHttpClient {
       requestConfig = { ...requestConfig, body: JSON.stringify(data) };
     }
 
+    let headers = { 'Content-Type': 'application/json' };
+
     if (isAuth) {
-      requestConfig = {
-        ...requestConfig,
-        headers: { ...this.getAuthHeader() },
-      };
+      headers = { ...headers, ...this.getAuthHeader() };
     }
+
+    requestConfig = {
+      ...requestConfig,
+      headers,
+    };
 
     try {
       const requestUrl = this.baseUrl + url;

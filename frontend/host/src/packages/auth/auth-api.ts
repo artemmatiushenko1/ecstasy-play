@@ -5,10 +5,10 @@ class AuthApi {
   constructor(private httpRequest: HttpRequest) {}
 
   signIn = (request: SignInRequest) =>
-    this.httpRequest.post('/sign-in', request, false);
+    this.httpRequest.post('/auth/signin', request, false);
 
   signUp = (request: SignInRequest) =>
-    this.httpRequest.post('/sign-up', request, false);
+    this.httpRequest.post('/auth/signup', request, false);
 }
 
 export { AuthApi };
