@@ -1,7 +1,6 @@
 import { AppRoute } from '@/libs/enums/enums.js';
 import { useLocation } from 'react-router-dom';
-import { SignInForm } from './libs/components/sign-in-form.js';
-import { SignUpForm } from './libs/components/sign-up-form.js';
+import { SignInForm, SignUpForm } from './libs/components/components.js';
 import { Card, CardBody, Divider, Image } from '@nextui-org/react';
 import logoImg from '@/assets/logo.png';
 
