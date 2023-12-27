@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom';
 
 const SignUpForm = () => {
   const setAccessToken = useAuthStore((state) => state.setAccessToken);
+
   const signUpMutation = useMutation(authApi.signUp, {
     onSuccess: ({ accessToken }) => setAccessToken(accessToken),
   });

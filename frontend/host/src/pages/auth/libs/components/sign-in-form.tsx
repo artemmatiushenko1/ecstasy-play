@@ -1,13 +1,18 @@
 import { AppRoute } from '@/libs/enums/app-route.enum';
-import { DataStatus } from '@/libs/enums/enums.js';
+import { authApi } from '@/packages/auth/auth.package.js';
 import { SignInRequest } from '@/packages/auth/libs/types/types.js';
 import { useAuthStore } from '@/stores/auth/auth.js';
 import { Button, Input } from '@nextui-org/react';
 import { MdLockOutline, MdOutlineMailOutline } from 'react-icons/md';
+import { useMutation } from 'react-query';
 import { Link } from 'react-router-dom';
 
 const SignInForm = () => {
-  const { signIn, signInStatus } = useAuthStore();
+  const setAccessToken = useAuthStore((state) => state.setAccessToken);
+
+  const signInMutation = useMutation(authApi.signIn, {
+    onSuccess: ({ accessToken }) => setAccessToken(accessToken),
+  });
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,7 +21,7 @@ const SignInForm = () => {
       new FormData(e.target as HTMLFormElement),
     ) as SignInRequest;
 
-    signIn(signInRequest);
+    signInMutation.mutate(signInRequest);
   };
 
   return (
@@ -44,12 +49,12 @@ const SignInForm = () => {
           placeholder="Password"
         />
         <Button
-          type="submit"
           fullWidth
+          type="submit"
           color="primary"
           className="mb-2"
           variant="solid"
-          isLoading={signInStatus === DataStatus.PENDING}
+          isLoading={signInMutation.isLoading}
         >
           Sign In
         </Button>
