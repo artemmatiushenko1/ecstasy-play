@@ -61,7 +61,7 @@ const Sidebar = () => {
   return (
     <div className="p-3 h-full flex flex-col rounded-tr-lg shadow-md">
       <div className="flex gap-2 items-center p-3">
-        <Image src={logoImg} />
+        <Image src={logoImg} width="100%" />
       </div>
       <Divider />
       <Listbox variant="flat" classNames={{ 'base': 'flex-1' }}>
@@ -104,17 +104,22 @@ const Sidebar = () => {
             endContent={<MdOutlineExpandMore />}
             classNames={{
               'base': 'h-auto max-w-full w-full p-2',
+              content: 'w-0',
             }}
           >
             <User
               name={user?.name}
               description={user?.email}
+              classNames={{
+                name: 'text-ellipsis overflow-hidden w-full max-w-[80%]',
+                description: 'text-ellipsis overflow-hidden w-full max-w-[80%]',
+              }}
               avatarProps={{
                 className: 'transition-transform mr-2',
                 isBordered: true,
                 size: 'sm',
                 color: 'primary',
-                src: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
+                src: 'https://a5.behance.net/cc1f6d67328210c632719cfbf4152a6b1ca3b35a/img/profile/avatars/magicwand-138.png?cb=264615658',
               }}
             />
           </Chip>
