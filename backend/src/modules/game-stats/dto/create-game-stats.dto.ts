@@ -17,9 +17,4 @@ export class CreateGameStatsDto {
   @ValidateNested()
   @ApiProperty({ type: IdDto, required: true })
   public readonly game: IdDto;
-
-  @IsNotEmpty()
-  @ValidateNested()
-  @ApiProperty({ type: IdDto, required: true })
-  public readonly user: IdDto;
 }

@@ -2,10 +2,8 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
-  Delete,
   Get,
   Param,
-  Patch,
   Post,
   UseGuards,
   UseInterceptors,
@@ -13,13 +11,16 @@ import {
 import { GameStatsService } from './game-stats.service';
 import { GameStatsEntity } from './game-stats.entity';
 import { IdDto } from 'src/common/dto';
-import { CreateGameStatsDto, UpdateGameStatsDto } from './dto';
-import { ApiTags } from '@nestjs/swagger';
+import { CreateGameStatsDto } from './dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import { AccessTokenGuard } from '../auth/guards';
+import { User } from 'src/common/decorators';
+import { JwtPayloadUser } from '../auth/types';
 
 @ApiTags('game-stats')
 @Controller('game-stats')
+@ApiBearerAuth()
 @UseGuards(AccessTokenGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 export class GameStatsController {
@@ -42,24 +43,13 @@ export class GameStatsController {
   @Post()
   createOne(
     @Body() createEntityDto: CreateGameStatsDto,
+    @User() user: JwtPayloadUser,
   ): Promise<GameStatsEntity> {
-    const model = plainToInstance(GameStatsEntity, createEntityDto);
+    const model = plainToInstance(GameStatsEntity, {
+      ...createEntityDto,
+      user: { id: user.id },
+    });
 
     return this.gameStatsService.createOne(model);
-  }
-
-  @Patch(':id')
-  updateOne(
-    @Param() conditions: IdDto,
-    @Body() updateEntityDto: UpdateGameStatsDto,
-  ): Promise<GameStatsEntity> {
-    const model = plainToInstance(GameStatsEntity, updateEntityDto);
-
-    return this.gameStatsService.updateOne(conditions, model);
-  }
-
-  @Delete(':id')
-  deleteOne(@Param() conditions: IdDto): Promise<GameStatsEntity> {
-    return this.gameStatsService.deleteOne(conditions);
   }
 }
