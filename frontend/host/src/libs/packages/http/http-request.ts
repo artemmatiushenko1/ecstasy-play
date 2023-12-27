@@ -3,7 +3,7 @@ import {
   HttpClientRequestConfig,
 } from './libs/interfaces/interfaces.js';
 
-export class HttpRequest {
+class HttpRequest {
   private httpClient: IHttpClient;
 
   constructor(httpClient: IHttpClient) {
@@ -39,4 +39,4 @@ export class HttpRequest {
   }
 }
 
-export default HttpRequest;
+export { HttpRequest };

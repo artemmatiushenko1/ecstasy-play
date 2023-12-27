@@ -1,14 +1,22 @@
 import { AppRoute } from '@/libs/enums/app-route.enum';
+import { DataStatus } from '@/libs/enums/enums.js';
+import { SignInRequest } from '@/packages/auth/libs/types/types.js';
+import { useAuthStore } from '@/stores/auth/auth.js';
 import { Button, Input } from '@nextui-org/react';
 import { MdLockOutline, MdOutlineMailOutline } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
 const SignInForm = () => {
+  const { signIn, signInStatus } = useAuthStore();
+
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const formData = new FormData(e.target as HTMLFormElement);
-    console.log(Object.fromEntries(formData));
+    const signInRequest = Object.fromEntries(
+      new FormData(e.target as HTMLFormElement),
+    ) as SignInRequest;
+
+    signIn(signInRequest);
   };
 
   return (
@@ -41,6 +49,7 @@ const SignInForm = () => {
           color="primary"
           className="mb-2"
           variant="solid"
+          isLoading={signInStatus === DataStatus.PENDING}
         >
           Sign In
         </Button>
