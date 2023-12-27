@@ -22,7 +22,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prepare": "cd .. && husky install backend/.husky"
+    "prepare": "cd .. && husky install backend/.husky",
+    "typeorm:cli": "ts-node ./node_modules/typeorm/cli",
+    "typeorm:migrations": "npm run typeorm:cli -- migration:create src/systems/database/migrations/name"
   },
   "dependencies": {
     "@fastify/static": "^6.12.0",
