@@ -6,12 +6,12 @@ import { UserEntity } from '../users/user.entity';
 
 @Entity({ name: 'game-stats' })
 export class GameStatsEntity extends CommonEntity {
-  @ApiProperty({ type: 'int' })
-  @Column({ type: 'int' })
+  @ApiProperty({ type: 'integer' })
+  @Column({ type: 'integer' })
   time: number;
 
-  @ApiProperty({ type: 'int' })
-  @Column({ type: 'int' })
+  @ApiProperty({ type: 'integer' })
+  @Column({ type: 'integer' })
   score: number;
 
   @ApiProperty({ type: () => GameEntity })
