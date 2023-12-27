@@ -4,7 +4,6 @@ import { Exclude } from 'class-transformer';
 import { CommonEntity } from 'src/common/entities';
 import * as bcrypt from 'bcrypt';
 import { UserRoleEnum } from 'src/common/enums';
-import { SALT_ROUNDS } from 'src/common/constants';
 
 @Entity({ name: 'users' })
 export class UserEntity extends CommonEntity {
@@ -29,6 +28,7 @@ export class UserEntity extends CommonEntity {
   @BeforeUpdate()
   public async hashPassword() {
     if (this.password) {
+      const SALT_ROUNDS = Number(process.env.SALT_ROUNDS);
       this.password = await bcrypt.hash(this.password, SALT_ROUNDS);
     }
   }
