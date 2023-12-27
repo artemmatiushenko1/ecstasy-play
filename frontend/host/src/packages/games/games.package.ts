@@ -1,2 +1,2 @@
-export { GameApp, GameAppEvent } from './enums/enums.js';
-export { GameAppEventService } from './services/services.js';
+export { GameApp, GameAppEvent } from './libs/enums/enums.js';
+export { GameAppEventService } from './libs/services/services.js';
