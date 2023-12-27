@@ -29,5 +29,15 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(__dirname, 'src'),
       },
     },
+    server: {
+      proxy: {
+        [env.VITE_API_URL]: {
+          target: env.VITE_API_HOST,
+          changeOrigin: true,
+          secure: false,
+          ws: true,
+        },
+      },
+    },
   };
 });

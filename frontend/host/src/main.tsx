@@ -4,13 +4,17 @@ import { NextUIProvider } from '@nextui-org/react';
 import { App } from './libs/components/components.js';
 import { BrowserRouter } from 'react-router-dom';
 import React from 'react';
+import { QueryClientProvider } from 'react-query';
+import { queryClient } from './libs/packages/react-query/react-query.package.js';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <NextUIProvider>
-        <App />
-      </NextUIProvider>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <NextUIProvider>
+          <App />
+        </NextUIProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
   </React.StrictMode>,
 );
