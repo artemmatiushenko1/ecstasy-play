@@ -4,7 +4,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 interface AuthState {
   accessToken: string | null;
 
-  setAccessToken: (accessToken: string) => void;
+  setAccessToken: (accessToken: string | null) => void;
 }
 
 const useAuthStore = create<AuthState>()(
@@ -12,7 +12,7 @@ const useAuthStore = create<AuthState>()(
     (set) => ({
       accessToken: null,
 
-      setAccessToken: (accessToken: string) => {
+      setAccessToken: (accessToken: string | null) => {
         set({ accessToken });
       },
     }),

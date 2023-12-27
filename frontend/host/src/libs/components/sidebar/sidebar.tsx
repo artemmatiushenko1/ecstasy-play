@@ -21,12 +21,18 @@ import { useLocation, matchPath, useNavigate } from 'react-router-dom';
 import logoImg from '@/assets/logo.png';
 import { AppRoute } from '@/libs/enums/enums.js';
 import { useProfileStore } from '@/stores/profile/profile';
+import { useAuthStore } from '@/stores/auth/auth';
 
 const Sidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const user = useProfileStore((state) => state.user);
+  const { user, setUser } = useProfileStore(({ user, setUser }) => ({
+    user,
+    setUser,
+  }));
+
+  const setAccessToken = useAuthStore((state) => state.setAccessToken);
 
   const menuItems = [
     {
@@ -46,6 +52,11 @@ const Sidebar = () => {
       bgColor: 'bg-amber-100',
     },
   ];
+
+  const handleLogout = () => {
+    setAccessToken(null);
+    setUser(null);
+  };
 
   return (
     <div className="p-3 h-full flex flex-col rounded-tr-lg shadow-md">
@@ -113,7 +124,12 @@ const Sidebar = () => {
             <p className="font-semibold">Signed in as</p>
             <p className="font-semibold">{user?.email}</p>
           </DropdownItem>
-          <DropdownItem startContent={<MdLogout />} key="logout" color="danger">
+          <DropdownItem
+            startContent={<MdLogout />}
+            key="logout"
+            color="danger"
+            onPress={handleLogout}
+          >
             Log Out
           </DropdownItem>
         </DropdownMenu>
