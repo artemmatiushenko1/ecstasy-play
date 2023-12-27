@@ -14,13 +14,14 @@ import { GamesService } from './games.service';
 import { GameEntity } from './game.entity';
 import { IdDto } from 'src/common/dto';
 import { CreateGameDto, UpdateGameDto } from './dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import { AccessTokenGuard } from '../auth/guards';
 
 @ApiTags('games')
 @Controller('games')
 @UseGuards(AccessTokenGuard)
+@ApiBearerAuth()
 @UseInterceptors(ClassSerializerInterceptor)
 export class GamesController {
   constructor(private readonly gamesService: GamesService) {}
