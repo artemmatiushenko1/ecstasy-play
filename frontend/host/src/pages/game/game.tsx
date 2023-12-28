@@ -16,7 +16,7 @@ import {
   gamesStatsApi,
 } from '@/packages/games/games.package.js';
 import { formatGameTime } from './libs/helpers/helpers.js';
-import { useTimer } from '@/libs/hooks/hooks.js';
+import { useMounted, useTimer } from '@/libs/hooks/hooks.js';
 import { useMutation } from 'react-query';
 
 const ConnectTilesApp = lazy(
@@ -48,6 +48,8 @@ const GamePage = () => {
 
   const [score, setScore] = useState(0);
   const [hasGameEnded, setHasGameEnded] = useState(false);
+
+  const mounted = useMounted();
 
   const { mutate: postStatsMutate } = useMutation(() =>
     gamesStatsApi.post({ score, time, game: { id: appId } }),
@@ -99,7 +101,7 @@ const GamePage = () => {
         GameAppEventService.unsubscribe(event, handler);
       }
     };
-  }, [startTimer, stopTimer, resetTimer, postStatsMutate]);
+  }, [stopTimer, resetTimer, startTimer, postStatsMutate]);
 
   const handleQuitGame = () => {
     navigate(AppRoute.HOME);
@@ -179,7 +181,7 @@ const GamePage = () => {
         <div className="flex-1 flex items-center justify-center">
           <ErrorBoundary>
             <Suspense fallback={<Spinner size="lg" />}>
-              <GameAppComponent />
+              {mounted && <GameAppComponent />}
             </Suspense>
           </ErrorBoundary>
         </div>
