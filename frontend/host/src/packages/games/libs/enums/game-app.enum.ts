@@ -1,7 +1,7 @@
 const GameApp = {
-  SNAKE: 'snake',
-  TETRIS: 'tetris',
-  CONNECT_TILES: 'connect_titles',
+  SNAKE: 'Snake',
+  TETRIS: 'Tetris',
+  CONNECT_TILES: 'Connect Tiles',
 } as const;
 
 export { GameApp };

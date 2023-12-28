@@ -2,16 +2,23 @@ import { GameCard } from './libs/components/components.js';
 import tetrisCoverImage from '@/assets/tetris-cover.png';
 import snakeCoverImage from '@/assets/snake-cover.png';
 import connectTilesCoverImage from '@/assets/connect-tiles-cover.png';
-import { GameApp } from '@/packages/games/games.package.js';
+import { GameApp, gamesApi } from '@/packages/games/games.package.js';
 import { useProfileStore } from '@/stores/profile/profile.js';
+import { useQuery } from 'react-query';
+import { Spinner } from '@nextui-org/react';
 
 const HomePage = () => {
   const user = useProfileStore((state) => state.user);
 
-  const games = [
-    {
-      key: GameApp.TETRIS,
-      name: 'Tetris',
+  const { data: games, isLoading } = useQuery(
+    ['get-games'],
+    gamesApi.getAllGames,
+  );
+
+  console.log({ games });
+
+  const gamesMeta = {
+    [GameApp.TETRIS]: {
       cover: tetrisCoverImage,
       genre: 'Puzzle',
       summary: {
@@ -19,9 +26,7 @@ const HomePage = () => {
         totalGames: 34,
       },
     },
-    {
-      key: GameApp.SNAKE,
-      name: 'Snake',
+    [GameApp.SNAKE]: {
       cover: snakeCoverImage,
       genre: 'Puzzle',
       summary: {
@@ -29,9 +34,7 @@ const HomePage = () => {
         totalGames: 34,
       },
     },
-    {
-      key: GameApp.CONNECT_TILES,
-      name: 'Connect Tiles',
+    [GameApp.CONNECT_TILES]: {
       cover: connectTilesCoverImage,
       genre: 'Memory',
       summary: {
@@ -39,7 +42,7 @@ const HomePage = () => {
         totalGames: 34,
       },
     },
-  ];
+  };
 
   return (
     <div>
@@ -49,18 +52,26 @@ const HomePage = () => {
         mini-games to keep you entertained! Explore a variety of genres and
         challenge yourself with these bite-sized experiences.
       </p>
-      <div className="flex gap-3 flex-wrap">
-        {games.map((game) => (
-          <GameCard
-            key={game.key}
-            id={game.key}
-            name={game.name}
-            genre={game.genre}
-            coverImg={game.cover}
-            summary={game.summary}
-          />
-        ))}
-      </div>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <div className="flex gap-3 flex-wrap">
+          {games?.map((game) => {
+            const meta = gamesMeta[game.name as keyof typeof gamesMeta];
+
+            return (
+              <GameCard
+                key={game.id}
+                id={game.id}
+                name={game.name}
+                genre={meta.genre}
+                coverImg={meta.cover}
+                summary={meta.summary}
+              />
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

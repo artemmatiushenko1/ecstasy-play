@@ -82,6 +82,7 @@ const GamePage = () => {
 
   const handlePlayAgain = () => {
     GameAppEventService.fire(GameAppEvent.RESTART);
+
     resetTimer();
     startTimer();
     setHasGameEnded(false);
@@ -102,8 +103,10 @@ const GamePage = () => {
     },
   };
 
-  const { Component: GameAppComponent, name: appName } =
-    appsDataMapper[location.state.appId as keyof typeof appsDataMapper];
+  const appName = location.state.appName;
+
+  const { Component: GameAppComponent } =
+    appsDataMapper[location.state.appName as keyof typeof appsDataMapper];
 
   return (
     <>
