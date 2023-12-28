@@ -1,21 +1,21 @@
 import { ErrorBoundary } from '@/libs/components/components.js';
-import { Button, Chip, Spinner, Tooltip } from '@nextui-org/react';
+import { Button, Spinner, Tooltip } from '@nextui-org/react';
 import { Suspense, lazy, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import {
-  MdAccessTime,
-  MdSportsScore,
-  MdOutlineArrowBackIosNew,
-} from 'react-icons/md';
+import { MdSportsScore, MdOutlineArrowBackIosNew } from 'react-icons/md';
 import { AppRoute } from '@/libs/enums/enums.js';
-import { GameResultModal } from './libs/components/components.js';
+import { GameMetaChip, GameResultModal } from './libs/components/components.js';
 import {
   GameApp,
   GameAppEventService,
   GameAppEvent,
+  gamesStatsApi,
 } from '@/packages/games/games.package.js';
 import { formatGameTime } from './libs/helpers/helpers.js';
-import { useTimer } from '@/libs/hooks/hooks.js';
+import { useMounted, useTimer } from '@/libs/hooks/hooks.js';
+import { useMutation } from 'react-query';
+
+import styles from './game.module.css';
 
 const ConnectTilesApp = lazy(
   () => import('@/packages/games/apps/connect-tiles/connect-tiles.js'),
@@ -25,6 +25,12 @@ const SnakeApp = lazy(() => import('@/packages/games/apps/snake/snake.js'));
 
 const TetrisApp = lazy(() => import('@/packages/games/apps/tetris/tetris.js'));
 
+const appsDataMapper = {
+  [GameApp.SNAKE]: SnakeApp,
+  [GameApp.CONNECT_TILES]: ConnectTilesApp,
+  [GameApp.TETRIS]: TetrisApp,
+};
+
 const GamePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -32,12 +38,20 @@ const GamePage = () => {
   const [score, setScore] = useState(0);
   const [hasGameEnded, setHasGameEnded] = useState(false);
 
+  const mounted = useMounted();
+
+  const { mutate: postStatsMutate } = useMutation(() =>
+    gamesStatsApi.post({ score, time, game: { id: appId } }),
+  );
+
   const {
     time,
     stop: stopTimer,
     start: startTimer,
     reset: resetTimer,
   } = useTimer();
+
+  const { appName, appId } = location.state;
 
   useEffect(() => {
     const handleScoreUpdate = (e: CustomEventInit) => {
@@ -47,6 +61,8 @@ const GamePage = () => {
     const handleGameEnd = () => {
       setHasGameEnded(true);
       stopTimer();
+
+      postStatsMutate();
     };
 
     const handleGameAppMount = () => {
@@ -74,7 +90,7 @@ const GamePage = () => {
         GameAppEventService.unsubscribe(event, handler);
       }
     };
-  }, [startTimer, stopTimer, resetTimer]);
+  }, [stopTimer, resetTimer, startTimer, postStatsMutate]);
 
   const handleQuitGame = () => {
     navigate(AppRoute.HOME);
@@ -82,28 +98,14 @@ const GamePage = () => {
 
   const handlePlayAgain = () => {
     GameAppEventService.fire(GameAppEvent.RESTART);
+
     resetTimer();
     startTimer();
     setHasGameEnded(false);
   };
 
-  const appsDataMapper = {
-    [GameApp.SNAKE]: {
-      name: 'Snake',
-      Component: SnakeApp,
-    },
-    [GameApp.CONNECT_TILES]: {
-      name: 'Connect Tiles',
-      Component: ConnectTilesApp,
-    },
-    [GameApp.TETRIS]: {
-      name: 'Tetris',
-      Component: TetrisApp,
-    },
-  };
-
-  const { Component: GameAppComponent, name: appName } =
-    appsDataMapper[location.state.appId as keyof typeof appsDataMapper];
+  const GameAppComponent =
+    appsDataMapper[appName as keyof typeof appsDataMapper];
 
   return (
     <>
@@ -132,43 +134,23 @@ const GamePage = () => {
           <h1 className="py-2 px-4 rounded-lg text-lg font-medium flex-1 text-center">
             {appName}
           </h1>
-          <div className="flex items-center justify-end gap-5 flex-1">
-            <Tooltip content="Score" placement="bottom">
-              <div className="min-w-[100px] flex justify-end">
-                <Chip
-                  color="primary"
-                  className="text-xl"
-                  classNames={{
-                    base: 'h-auto bg-primary-50',
-                    content: 'flex items-center gap-2 text-primary font-medium',
-                  }}
-                >
-                  <MdSportsScore />
-                  <span>{score}</span>
-                </Chip>
-              </div>
-            </Tooltip>
-            <Tooltip content="Playing Time" placement="bottom">
-              <div className="min-w-[110px]">
-                <Chip
-                  color="primary"
-                  className="text-xl"
-                  classNames={{
-                    base: 'h-auto bg-primary-50',
-                    content: 'flex items-center gap-2 text-primary font-medium',
-                  }}
-                >
-                  <MdAccessTime />
-                  <span>{formatGameTime(time)}</span>
-                </Chip>
-              </div>
-            </Tooltip>
+          <div className={styles.gameMetaItemsWrapper}>
+            <GameMetaChip
+              value={score}
+              tooltip="Score"
+              icon={<MdSportsScore />}
+            />
+            <GameMetaChip
+              tooltip="Playing Time"
+              icon={<MdSportsScore />}
+              value={formatGameTime(time)}
+            />
           </div>
         </div>
         <div className="flex-1 flex items-center justify-center">
           <ErrorBoundary>
             <Suspense fallback={<Spinner size="lg" />}>
-              <GameAppComponent />
+              {mounted && <GameAppComponent />}
             </Suspense>
           </ErrorBoundary>
         </div>

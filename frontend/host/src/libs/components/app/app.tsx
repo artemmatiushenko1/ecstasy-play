@@ -12,6 +12,7 @@ import { useProfileStore } from '@/stores/profile/profile.js';
 import { useQuery } from 'react-query';
 import { Spinner } from '@nextui-org/react';
 import { authApi } from '@/packages/auth/auth.package.js';
+import { InsightsPage } from '@/pages/insights/insights.js';
 
 const App = () => {
   const { user, setUser } = useProfileStore(({ setUser, user }) => ({
@@ -52,7 +53,7 @@ const App = () => {
               </GameGuard>
             }
           />
-          <Route path={AppRoute.INSIGHTS} element={<div>Insights</div>} />
+          <Route path={AppRoute.INSIGHTS} element={<InsightsPage />} />
         </Route>
       </Route>
       <Route element={<PublicRoute />}>
