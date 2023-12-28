@@ -26,18 +26,9 @@ const SnakeApp = lazy(() => import('@/packages/games/apps/snake/snake.js'));
 const TetrisApp = lazy(() => import('@/packages/games/apps/tetris/tetris.js'));
 
 const appsDataMapper = {
-  [GameApp.SNAKE]: {
-    name: 'Snake',
-    Component: SnakeApp,
-  },
-  [GameApp.CONNECT_TILES]: {
-    name: 'Connect Tiles',
-    Component: ConnectTilesApp,
-  },
-  [GameApp.TETRIS]: {
-    name: 'Tetris',
-    Component: TetrisApp,
-  },
+  [GameApp.SNAKE]: SnakeApp,
+  [GameApp.CONNECT_TILES]: ConnectTilesApp,
+  [GameApp.TETRIS]: TetrisApp,
 };
 
 const GamePage = () => {
@@ -113,8 +104,8 @@ const GamePage = () => {
     setHasGameEnded(false);
   };
 
-  const { Component: GameAppComponent } =
-    appsDataMapper[location.state.appName as keyof typeof appsDataMapper];
+  const GameAppComponent =
+    appsDataMapper[appName as keyof typeof appsDataMapper];
 
   return (
     <>

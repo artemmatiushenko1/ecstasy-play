@@ -6,6 +6,8 @@ import { MdOutlineScoreboard } from 'react-icons/md';
 import { User as TUser } from '@/packages/users/users.package.js';
 import { useState } from 'react';
 import { formatGameTime } from '../game/libs/helpers/format-game-time.helper.js';
+import { InsightsTabKey } from './libs/enums/enums.js';
+import { aggregateLeaderboard } from './libs/helpers/helpers.js';
 
 const renderUser = (item: TUser) => (
   <User
@@ -25,39 +27,22 @@ const renderUser = (item: TUser) => (
 );
 
 const InsightsPage = () => {
-  const [tab, setTab] = useState('leaderboard');
+  const [tab, setTab] = useState<string>(InsightsTabKey.LEADERBOARD);
 
-  const { data: gameStats } = useQuery(['get-all-stats', tab], () => {
-    if (tab !== 'leaderboard') {
-      console.log({ tab });
-      return gamesStatsApi.getAll(tab);
-    } else {
-      return gamesStatsApi.getAll();
-    }
-  });
+  const { data: gameStats, isLoading: gamesStatsLoading } = useQuery(
+    [gamesStatsApi.getAll.name, tab],
+    () =>
+      tab !== InsightsTabKey.LEADERBOARD
+        ? gamesStatsApi.getAll(tab)
+        : gamesStatsApi.getAll(),
+  );
 
-  const { data: games } = useQuery(['get-all-games'], gamesApi.getAllGames);
+  const { data: games, isLoading: gamesLoading } = useQuery(
+    [gamesApi.getAllGames.name],
+    gamesApi.getAllGames,
+  );
 
-  const globalLeaderboard = Object.entries(
-    (gameStats ?? []).reduce(
-      (acc, { user, score }) => ({
-        ...acc,
-        [user.id]: {
-          name: user.name,
-          email: user.email,
-          score: (acc[user.id as keyof typeof acc]?.score ?? 0) + score,
-        },
-      }),
-      {} as { [key: string]: { score: number; name: string; email: string } },
-    ) ?? {},
-  )
-    .map(([key, value]) => ({
-      key,
-      player: { name: value.name, email: value.email },
-      score: value.score,
-    }))
-    .sort((itemA, itemB) => itemB.score - itemA.score)
-    .map((entry, i) => ({ ...entry, rating: i + 1 }));
+  const globalLeaderboard = aggregateLeaderboard(gameStats ?? []);
 
   const tabs = [
     {
@@ -71,6 +56,7 @@ const InsightsPage = () => {
       content: (
         <InsightsTable
           data={globalLeaderboard}
+          isLoading={gamesStatsLoading}
           columns={[
             { label: '', key: 'rating' },
             {
@@ -93,6 +79,7 @@ const InsightsPage = () => {
         title: game.name,
         content: (
           <InsightsTable
+            isLoading={gamesStatsLoading || gamesLoading}
             data={
               gameStats?.map((item, i) => ({
                 ...item,
@@ -139,7 +126,7 @@ const InsightsPage = () => {
           <Tabs
             aria-label="Options"
             selectedKey={tab}
-            onSelectionChange={setTab}
+            onSelectionChange={(key: React.Key) => setTab(key as string)}
           >
             {tabs.map((tab) => {
               return (

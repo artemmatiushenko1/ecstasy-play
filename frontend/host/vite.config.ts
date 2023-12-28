@@ -8,8 +8,6 @@ export default defineConfig(({ mode }) => {
   const envDir = process.cwd();
   const env = { ...process.env, ...loadEnv(mode, envDir) };
 
-  console.log(mode, env.VITE_CONNECT_TILES_HOST);
-
   return {
     plugins: [
       react(),

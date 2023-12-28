@@ -15,16 +15,14 @@ const HomePage = () => {
   const user = useProfileStore((state) => state.user);
 
   const { data: games, isLoading: getGamesLoading } = useQuery(
-    ['get-games'],
+    [gamesApi.getAllGames.name],
     gamesApi.getAllGames,
   );
 
   const { data: gameStats, isLoading: getStatsLoding } = useQuery(
-    ['get-all-stats'],
+    [gamesStatsApi.getAll.name],
     () => gamesStatsApi.getAll(),
   );
-
-  console.log(gameStats);
 
   const userStats = (gameStats ?? []).filter(
     (item) => item.user.id === user?.id,
