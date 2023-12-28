@@ -13,9 +13,11 @@ import {
   GameApp,
   GameAppEventService,
   GameAppEvent,
+  gamesStatsApi,
 } from '@/packages/games/games.package.js';
 import { formatGameTime } from './libs/helpers/helpers.js';
 import { useTimer } from '@/libs/hooks/hooks.js';
+import { useMutation } from 'react-query';
 
 const ConnectTilesApp = lazy(
   () => import('@/packages/games/apps/connect-tiles/connect-tiles.js'),
@@ -25,6 +27,21 @@ const SnakeApp = lazy(() => import('@/packages/games/apps/snake/snake.js'));
 
 const TetrisApp = lazy(() => import('@/packages/games/apps/tetris/tetris.js'));
 
+const appsDataMapper = {
+  [GameApp.SNAKE]: {
+    name: 'Snake',
+    Component: SnakeApp,
+  },
+  [GameApp.CONNECT_TILES]: {
+    name: 'Connect Tiles',
+    Component: ConnectTilesApp,
+  },
+  [GameApp.TETRIS]: {
+    name: 'Tetris',
+    Component: TetrisApp,
+  },
+};
+
 const GamePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -32,12 +49,18 @@ const GamePage = () => {
   const [score, setScore] = useState(0);
   const [hasGameEnded, setHasGameEnded] = useState(false);
 
+  const { mutate: postStatsMutate } = useMutation(() =>
+    gamesStatsApi.post({ score, time, game: { id: appId } }),
+  );
+
   const {
     time,
     stop: stopTimer,
     start: startTimer,
     reset: resetTimer,
   } = useTimer();
+
+  const { appName, appId } = location.state;
 
   useEffect(() => {
     const handleScoreUpdate = (e: CustomEventInit) => {
@@ -47,6 +70,8 @@ const GamePage = () => {
     const handleGameEnd = () => {
       setHasGameEnded(true);
       stopTimer();
+
+      postStatsMutate();
     };
 
     const handleGameAppMount = () => {
@@ -74,7 +99,7 @@ const GamePage = () => {
         GameAppEventService.unsubscribe(event, handler);
       }
     };
-  }, [startTimer, stopTimer, resetTimer]);
+  }, [startTimer, stopTimer, resetTimer, postStatsMutate]);
 
   const handleQuitGame = () => {
     navigate(AppRoute.HOME);
@@ -87,23 +112,6 @@ const GamePage = () => {
     startTimer();
     setHasGameEnded(false);
   };
-
-  const appsDataMapper = {
-    [GameApp.SNAKE]: {
-      name: 'Snake',
-      Component: SnakeApp,
-    },
-    [GameApp.CONNECT_TILES]: {
-      name: 'Connect Tiles',
-      Component: ConnectTilesApp,
-    },
-    [GameApp.TETRIS]: {
-      name: 'Tetris',
-      Component: TetrisApp,
-    },
-  };
-
-  const appName = location.state.appName;
 
   const { Component: GameAppComponent } =
     appsDataMapper[location.state.appName as keyof typeof appsDataMapper];
