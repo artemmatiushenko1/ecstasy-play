@@ -1,18 +1,45 @@
-import { gamesStatsApi } from '@/packages/games/games.package';
+import { gamesApi, gamesStatsApi } from '@/packages/games/games.package';
 import { Tab, Tabs, User } from '@nextui-org/react';
 import { useQuery } from 'react-query';
 import { InsightsTable } from './libs/components/components.js';
-import { MdHistoryToggleOff, MdOutlineScoreboard } from 'react-icons/md';
-import { useProfileStore } from '@/stores/profile/profile.js';
-import { formatGameTime } from '../game/libs/helpers/format-game-time.helper.js';
+import { MdOutlineScoreboard } from 'react-icons/md';
 import { User as TUser } from '@/packages/users/users.package.js';
+import { useState } from 'react';
+import { formatGameTime } from '../game/libs/helpers/format-game-time.helper.js';
+
+const renderUser = (item: TUser) => (
+  <User
+    name={item.name}
+    description={item.email}
+    avatarProps={{
+      radius: 'full',
+      size: 'sm',
+      src: 'https://a5.behance.net/cc1f6d67328210c632719cfbf4152a6b1ca3b35a/img/profile/avatars/magicwand-138.png?cb=264615658',
+    }}
+    classNames={{
+      description: 'text-default-500',
+    }}
+  >
+    {item.name}
+  </User>
+);
 
 const InsightsPage = () => {
-  const user = useProfileStore(({ user }) => user);
-  const { data } = useQuery(['get-all-stats'], gamesStatsApi.getAll);
+  const [tab, setTab] = useState('leaderboard');
 
-  const leaderboard = Object.entries(
-    data?.reduce(
+  const { data: gameStats } = useQuery(['get-all-stats', tab], () => {
+    if (tab !== 'leaderboard') {
+      console.log({ tab });
+      return gamesStatsApi.getAll(tab);
+    } else {
+      return gamesStatsApi.getAll();
+    }
+  });
+
+  const { data: games } = useQuery(['get-all-games'], gamesApi.getAllGames);
+
+  const globalLeaderboard = Object.entries(
+    (gameStats ?? []).reduce(
       (acc, { user, score }) => ({
         ...acc,
         [user.id]: {
@@ -32,83 +59,70 @@ const InsightsPage = () => {
     .sort((itemA, itemB) => itemB.score - itemA.score)
     .map((entry, i) => ({ ...entry, rating: i + 1 }));
 
-  const history = (data ?? [])
-    .filter((entry) => entry.user.id === user?.id)
-    .map((entry) => {
-      const date = new Date(entry.createdAt);
-
-      return {
-        key: entry.id,
-        game: entry.game.name,
-        score: entry.score,
-        date: `${date.getFullYear()}/${
-          date.getMonth() + 1
-        }/${date.getDate()}` as string,
-        time: formatGameTime(entry.time),
-      };
-    });
-
-  console.log({ history });
-
   const tabs = [
     {
-      key: 'Leaderborad',
+      key: 'leaderboard',
       title: (
         <div className="flex items-center gap-2">
           <MdOutlineScoreboard />
-          <span>Leaderborad</span>
+          <span>Global Leaderborad</span>
         </div>
       ),
       content: (
         <InsightsTable
-          data={leaderboard}
+          data={globalLeaderboard}
           columns={[
             { label: '', key: 'rating' },
             {
               label: 'Player',
               key: 'player',
-              renderItem: (item: TUser) => (
-                <User
-                  avatarProps={{
-                    radius: 'full',
-                    size: 'sm',
-                    src: 'https://a5.behance.net/cc1f6d67328210c632719cfbf4152a6b1ca3b35a/img/profile/avatars/magicwand-138.png?cb=264615658',
-                  }}
-                  classNames={{
-                    description: 'text-default-500',
-                  }}
-                  description={item.email}
-                  name={item.name}
-                >
-                  {item.name}
-                </User>
-              ),
+              renderItem: renderUser,
             },
-            { label: 'Total Scores', key: 'score' },
+            {
+              label: 'Total Scores',
+              key: 'score',
+              renderItem: (score) => <span className="font-bold">{score}</span>,
+            },
           ]}
         />
       ),
     },
-    {
-      key: 'Your history',
-      title: (
-        <div className="flex items-center gap-2">
-          <MdHistoryToggleOff />
-          <span>Your history</span>
-        </div>
-      ),
-      content: (
-        <InsightsTable
-          data={history}
-          columns={[
-            { label: 'Date', key: 'date' },
-            { label: 'Game', key: 'game' },
-            { label: 'Time', key: 'time' },
-            { label: 'Total Scores', key: 'score' },
-          ]}
-        />
-      ),
-    },
+    ...(games ?? []).map((game) => {
+      return {
+        key: game.id,
+        title: game.name,
+        content: (
+          <InsightsTable
+            data={
+              gameStats?.map((item, i) => ({
+                ...item,
+                date: new Date(item.createdAt).toLocaleDateString(),
+                key: item.id,
+                rating: i + 1,
+                time: formatGameTime(item.time),
+              })) ?? []
+            }
+            columns={[
+              { label: '', key: 'rating' },
+              { label: 'Date', key: 'date' },
+              {
+                label: 'Player',
+                key: 'user',
+                renderItem: renderUser,
+              },
+              { label: 'Time', key: 'time' },
+              {
+                label: 'Scores',
+                key: 'score',
+                renderItem: (score) => (
+                  <span className="font-bold">{score}</span>
+                ),
+              },
+            ]}
+          />
+        ),
+      };
+    }),
   ];
 
   return (
@@ -122,7 +136,11 @@ const InsightsPage = () => {
       </p>
       <div>
         <div className="flex w-full flex-col">
-          <Tabs aria-label="Options">
+          <Tabs
+            aria-label="Options"
+            selectedKey={tab}
+            onSelectionChange={setTab}
+          >
             {tabs.map((tab) => {
               return (
                 <Tab key={tab.key} title={tab.title}>

@@ -9,8 +9,10 @@ class GamesStatsApi {
   post = (data: PostGamesStatsRequest) =>
     this.httpRequest.post('/game-stats', data);
 
-  getAll = () =>
-    this.httpRequest.get<
+  getAll = (gameId?: string) => {
+    const url = gameId ? `/game-stats?gameId=${gameId}` : '/game-stats';
+
+    return this.httpRequest.get<
       {
         id: string;
         score: number;
@@ -19,7 +21,8 @@ class GamesStatsApi {
         createdAt: string;
         time: number;
       }[]
-    >('/game-stats');
+    >(url);
+  };
 }
 
 export { GamesStatsApi };
