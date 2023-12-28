@@ -1,0 +1,7 @@
+.gameMetaItemsWrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 120px);
+  justify-items: end;
+  justify-content: end;
+  flex: 1;
+}
