@@ -1,17 +1,28 @@
-import { HttpRequest } from '@/libs/packages/http/http.package.js';
+import { HttpClient } from '@/libs/packages/http/http.package.js';
 import { SignInRequest, SignUpResponse } from './libs/types/types.js';
 import { User } from '../users/users.package.js';
 
 class AuthApi {
-  constructor(private httpRequest: HttpRequest) {}
+  constructor(private httpClient: HttpClient) {}
 
-  signIn = (request: SignInRequest) =>
-    this.httpRequest.post<SignUpResponse>('/auth/signin', request, false);
+  signIn = (data: SignInRequest) =>
+    this.httpClient.request<SignUpResponse>({
+      url: '/auth/signin',
+      data,
+      method: 'POST',
+      isAuth: false,
+    });
 
-  signUp = (request: SignInRequest) =>
-    this.httpRequest.post<SignUpResponse>('/auth/signup', request, false);
+  signUp = (data: SignInRequest) =>
+    this.httpClient.request<SignUpResponse>({
+      url: '/auth/signup',
+      data,
+      method: 'POST',
+      isAuth: false,
+    });
 
-  getProfile = () => this.httpRequest.get<User>('/auth/profile');
+  getProfile = () =>
+    this.httpClient.request<User>({ url: '/auth/profile', method: 'GET' });
 }
 
 export { AuthApi };

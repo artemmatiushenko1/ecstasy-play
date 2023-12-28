@@ -1,4 +1,4 @@
-import { HttpClientRequestConfig } from './http-client-request-config.js';
+import { HttpClientRequestConfig } from '../types/http-client-request-config.js';
 
 interface IHttpClient {
   baseUrl: string;

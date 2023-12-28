@@ -24,6 +24,8 @@ const HomePage = () => {
     () => gamesStatsApi.getAll(),
   );
 
+  console.log(gameStats);
+
   const userStats = (gameStats ?? []).filter(
     (item) => item.user.id === user?.id,
   );
@@ -35,8 +37,6 @@ const HomePage = () => {
     }),
     {} as { [key: string]: number[] },
   );
-
-  console.log(scoresByGames);
 
   const gamesMeta = {
     [GameApp.TETRIS]: {

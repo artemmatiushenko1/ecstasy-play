@@ -1,27 +1,21 @@
-import { HttpRequest } from '@/libs/packages/http/http.package.js';
-import { PostGamesStatsRequest } from './libs/types/post-games-stats-request';
-import { Game } from './libs/types/types.js';
-import { User } from '../users/users.package.js';
+import { PostGamesStatsRequest } from './libs/types/types.js';
+import { GameStatsEntry } from './libs/types/types.js';
+import { HttpClient } from '@/libs/packages/http/http-client.js';
 
 class GamesStatsApi {
-  constructor(private httpRequest: HttpRequest) {}
+  constructor(private httpClient: HttpClient) {}
 
   post = (data: PostGamesStatsRequest) =>
-    this.httpRequest.post('/game-stats', data);
+    this.httpClient.request({ url: '/game-stats', method: 'POST', data });
 
   getAll = (gameId?: string) => {
-    const url = gameId ? `/game-stats?gameId=${gameId}` : '/game-stats';
-
-    return this.httpRequest.get<
-      {
-        id: string;
-        score: number;
-        game: Game;
-        user: User;
-        createdAt: string;
-        time: number;
-      }[]
-    >(url);
+    return this.httpClient.request<GameStatsEntry[]>({
+      url: '/game-stats',
+      method: 'GET',
+      query: {
+        gameId,
+      },
+    });
   };
 }
 
