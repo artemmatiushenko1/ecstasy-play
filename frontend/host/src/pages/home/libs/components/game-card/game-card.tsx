@@ -1,9 +1,10 @@
 import { Button, Card, CardBody, Chip, Image } from '@nextui-org/react';
-import { GameSummaryItem } from '../components';
+import { GameSummaryItem } from '../components.js';
 import { MdPlayCircleFilled, MdSportsScore } from 'react-icons/md';
 import styles from './game-card.module.scss';
 import classNames from 'classnames';
 import { useNavigate } from 'react-router-dom';
+import { AppRoute } from '@/libs/enums/enums.js';
 
 interface IGameCardProps {
   id: string;
@@ -19,7 +20,8 @@ interface IGameCardProps {
 const GameCard = ({ genre, name, summary, coverImg, id }: IGameCardProps) => {
   const navigate = useNavigate();
 
-  const handlePlayNowClick = () => navigate('/game', { state: { appId: id } });
+  const handlePlayNowClick = () =>
+    navigate(AppRoute.GAME, { state: { appId: id, appName: name } });
 
   return (
     <Card
@@ -65,9 +67,10 @@ const GameCard = ({ genre, name, summary, coverImg, id }: IGameCardProps) => {
         </div>
         <Image
           alt="Card background"
-          className="object-cover rounded-xl"
+          className="object-cover rounded-xl w-[150px]"
           src={coverImg}
           width={150}
+          height={150}
         />
       </CardBody>
     </Card>

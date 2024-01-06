@@ -31,7 +31,7 @@ const GameResultModal = ({
       <ModalContent className="py-9">
         <ModalBody className="text-center">
           <h2 className="absolute top-[-15px] left-[50%] -translate-x-2/4 bg-amber-400 text-white p-3 rounded-md">
-            Game Is Over
+            Game is over
           </h2>
           <div className="flex flex-col items-center">
             <p className="mb-5 text-default">You've scored:</p>
